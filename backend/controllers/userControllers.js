@@ -27,4 +27,22 @@ const createUser = async (req, res) => {
     }
 };
 
-module.exports = { createUser };
+
+const loginUser = async (req, res) => {
+    // Login logic to be implemented
+    try {
+        const {email,password} = req.body;
+
+        const user = await UserModel.findOne({where:{email}});
+        if(!user || user.password !== password){
+            return res.status(401).json({message:"Invalid email or password"});
+        }
+        return res.status(200).json({message:"Login successful", user});
+
+    } catch (error) {
+         console.error(error);
+        return res.status(500).json({ message: "Server error" });
+    }
+};
+
+module.exports = { createUser, loginUser };
