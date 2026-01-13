@@ -1,22 +1,30 @@
 const UserModel = require('../models/user.js');
 
+const createUser = async (req, res) => {
+    try {
+        const { name, email, password } = req.body; 
 
-const createUser = (req, res) => {
-    const { username, email, password } = req.body; 
+        if (!name || !email || !password) {
+            return res.status(400).json({ message: 'All fields are required.' });
+        }   
 
-    if (!username || !email || !password) {
-       return res.status(400).json({ message: 'All fields are required.' });
-    }   
-    UserModel.create({ name: username, email: email, password: password })
-        .then(user => {
-            console.log('User created successfully:', user);
-        })
-        .catch(err => {
-            console.error('Error creating user:', err);
-            return res.status(500).json({ message: 'Internal server error.' });
+        const existingUser = await UserModel.findOne({ where: { email } });
+
+        if (existingUser) {
+            return res.status(409).json({ message: 'User with this email already exists.' });
+        }
+
+        const user = await UserModel.create({ name, email, password });
+
+        return res.status(201).json({
+            message: "User created successfully",
+            user
         });
-    res.status(201).json({ message: 'User created successfully!' });
-}   
 
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Server error" });
+    }
+};
 
 module.exports = { createUser };
