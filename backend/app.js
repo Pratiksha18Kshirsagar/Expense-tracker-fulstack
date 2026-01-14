@@ -4,6 +4,7 @@ const app = express();
 const seqelize = require('./utils/db');
 const port = 4000;
 const userRoutes = require('./routes/userRoutes');
+const expenseRoutes = require('./routes/expenseRoutes');
 
 app.use(cors());
 app.use(express.json());
@@ -12,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 
 
 app.use('/user', userRoutes);
-
+app.use('/expense', expenseRoutes);
 
 app.get('/', (req, res) => {
     res.send('Hello World!');
