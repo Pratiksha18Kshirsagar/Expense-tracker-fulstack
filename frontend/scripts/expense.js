@@ -1,5 +1,5 @@
 const form = document.querySelector('form');
-
+const token = localStorage.getItem('token');
 
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -9,7 +9,7 @@ form.addEventListener('submit', async (e) => {
     try {
         const response = await axios.post('http://localhost:4000/expense/addExpense', {
             expense_amount, expense_description, category
-        });
+        } , { headers: {"Authorization": token} });
         loadExpenses();
         console.log(response.data);
         alert('Expense added successfully!');
@@ -42,7 +42,6 @@ const deleteExpense = async (id) => {
         loadExpenses();
     } catch (error) {   
         console.error('Error deleting expense:', error);
-
     }
 };  
 

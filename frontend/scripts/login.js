@@ -11,6 +11,8 @@ form.addEventListener('submit', async (e) => {
         });
         console.log(response.data);
         alert('Successfully logged In!.');
+        localStorage.setItem('token', response.data.token);
+        window.location.href = "./expense.html";
     } catch (error) {
         console.error('Error during login:', error);
         alert('Login failed. Please try again.');
