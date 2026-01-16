@@ -1,7 +1,7 @@
 const User = require('./user');
 const Expense = require('./expense');
 
-User.hasMany(Expense);
+User.hasMany(Expense, { foreignKey: 'userId' ,onDelete:'CASCADE' });
 Expense.belongsTo(User, { foreignKey: 'userId' });
 
 module.exports = {

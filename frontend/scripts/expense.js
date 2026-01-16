@@ -21,7 +21,7 @@ form.addEventListener('submit', async (e) => {
 
 const loadExpenses = async () => {
     try {
-        const response = await axios.get('http://localhost:4000/expense/getExpenses');
+        const response = await axios.get('http://localhost:4000/expense/getExpenses' , { headers: {"Authorization": token} });
         const expenses = response.data.expenses;
         const expenseList = document.getElementById('expense_list');
         expenseList.innerHTML = '';
@@ -38,7 +38,7 @@ const loadExpenses = async () => {
 
 const deleteExpense = async (id) => {
     try {
-        await axios.delete(`http://localhost:4000/expense/deleteExpense/${id}`);
+        await axios.delete(`http://localhost:4000/expense/deleteExpense/${id}` , { headers: {"Authorization": token} });
         loadExpenses();
     } catch (error) {   
         console.error('Error deleting expense:', error);

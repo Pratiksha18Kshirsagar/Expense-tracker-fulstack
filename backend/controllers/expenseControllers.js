@@ -1,16 +1,18 @@
-const expenseModel = require('../models/expense');
-const Expense = expenseModel;
+const ExpenseModel = require('../models/expense');
+
 
 
 const addExpense = async (req, res) => {
     try {
         const { expense_amount, expense_description, category } = req.body;
-        const newExpense = await Expense.create({
+        const newExpense = await ExpenseModel.create({
             expense_amount,
             expense_description,
             category,
+            userId: req.user.id
         });
-        res.status(201).json({ message: 'Expense added successfully', newExpense });
+        // await req.user.createExpenseModel({expense_amount, expense_description, category});
+        res.status(201).json({ message: 'Expense added successfully' });
     } catch (error) {
         console.error('Error adding expense:', error);
         res.status(500).json({ message: 'Internal server error' });
@@ -19,7 +21,10 @@ const addExpense = async (req, res) => {
 
 const getExpenses = async(req,res)=>{
     try{
-        const expenses = await Expense.findAll();
+        // const expenses = await ExpenseModel.findAll();
+        // const expenses = await req.user.getExpenseModels();
+        const expenses = await ExpenseModel.findAll({ where: { userId: req.user.id } });
+
         res.status(200).json({expenses});
     }catch(error){
         console.error('Error fetching expenses:', error);
@@ -31,7 +36,7 @@ const getExpenses = async(req,res)=>{
 const deleteExpense = async (req, res) => {
     try {
         const expenseId = req.params.id;    
-        const deleted = await Expense.destroy({ where: { id: expenseId } });
+        const deleted = await ExpenseModel.destroy({ where: { id: expenseId } });
         if (deleted) {
             res.status(200).json({ message: 'Expense deleted successfully' });
         } else {

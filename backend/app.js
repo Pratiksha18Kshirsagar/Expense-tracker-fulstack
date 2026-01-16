@@ -5,6 +5,7 @@ const seqelize = require('./utils/db');
 const port = 4000;
 const userRoutes = require('./routes/userRoutes');
 const expenseRoutes = require('./routes/expenseRoutes');
+require('./models/index');
 
 app.use(cors());
 app.use(express.json());
