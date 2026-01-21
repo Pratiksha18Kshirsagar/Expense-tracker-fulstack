@@ -3,6 +3,24 @@ const token = localStorage.getItem('token');
 const premiumButton = document.getElementById('premiumBtn');
 const premiumTitle = document.getElementById('premiumTitle');
 premiumTitle.style.display = 'none';
+const leaderBoardBtn = document.getElementById('leaderBoard');
+const leaderBoardList = document.getElementById('leaderBoardList');
+
+leaderBoardBtn.addEventListener('click', async () => {
+    try {
+        const response = await axios.get('http://localhost:4000/premium/leaderboard', { headers: {"Authorization": token} });
+        const leaderboardData = response.data;
+        leaderBoardList.innerHTML = '';
+        leaderboardData.forEach(user => {
+            const li = document.createElement('li');
+            li.textContent = `Name: ${user.name}, Total Expense: ${user.total_expense == null ? 0 : user.total_expense}`;
+            leaderBoardList.appendChild(li);
+        });
+    }
+    catch (error) {
+        console.error('Error fetching leaderboard:', error);
+    }
+});
 
 const ispremiumuser = async() => {
     try {
@@ -10,7 +28,6 @@ const ispremiumuser = async() => {
         if(response.data.isPremium){
             premiumButton.style.display = 'none';
             premiumTitle.style.display = 'block';
-
         }
     }
     catch (error) {
