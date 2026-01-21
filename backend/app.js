@@ -25,7 +25,7 @@ app.use('/premium', isPremiumUser);
 
 
 
-seqelize.sync({alter:true}).then(() => {
+seqelize.sync().then(() => {
     app.listen(port, () => {
         console.log(`Server is running on http://localhost:${port}`);
     });

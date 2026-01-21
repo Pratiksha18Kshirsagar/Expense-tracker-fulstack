@@ -11,6 +11,8 @@ const addExpense = async (req, res) => {
             category,
             userId: req.user.id
         });
+        req.user.totalExpense += parseInt(expense_amount);
+        await req.user.save();
         // await req.user.createExpenseModel({expense_amount, expense_description, category});
         res.status(201).json({ message: 'Expense added successfully' });
     } catch (error) {
