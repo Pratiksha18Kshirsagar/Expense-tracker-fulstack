@@ -22,8 +22,8 @@ const User = sequelize.define("User",
       allowNull: false
     },
     isPremium: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
     }
   },
 );
