@@ -1,5 +1,23 @@
 const form = document.querySelector('form');
 const token = localStorage.getItem('token');
+const premiumButton = document.getElementById('premiumBtn');
+const premiumTitle = document.getElementById('premiumTitle');
+premiumTitle.style.display = 'none';
+
+const ispremiumuser = async() => {
+    try {
+        const response = await axios.get('http://localhost:4000/premium/premiumStatus', { headers: {"Authorization": token} });
+        if(response.data.isPremium){
+            premiumButton.style.display = 'none';
+            premiumTitle.style.display = 'block';
+
+        }
+    }
+    catch (error) {
+        console.error('Error fetching premium status:', error);
+    }
+};
+ispremiumuser();
 
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
