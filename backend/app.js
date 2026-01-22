@@ -7,6 +7,7 @@ const userRoutes = require('./routes/userRoutes');
 const expenseRoutes = require('./routes/expenseRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 const isPremiumUser = require('./routes/premiumRoutes');
+const geminiRoutes = require('./routes/geminiRoutes');
 require('./models/index');
 
 const path = require("path");
@@ -22,6 +23,7 @@ app.use('/user', userRoutes);
 app.use('/expense', expenseRoutes);
 app.use('/payment', paymentRoutes);
 app.use('/premium', isPremiumUser);
+app.use('/gemini', geminiRoutes);
 
 
 

@@ -8,7 +8,7 @@ const leaderBoardList = document.getElementById('leaderBoardList');
 
 leaderBoardBtn.addEventListener('click', async () => {
     try {
-        const response = await axios.get('http://localhost:4000/premium/leaderboard', { headers: {"Authorization": token} });
+        const response = await axios.get('http://localhost:4000/premium/leaderboard', { headers: { "Authorization": token } });
         const leaderboardData = response.data;
         leaderBoardList.innerHTML = '';
         leaderboardData.forEach(user => {
@@ -22,10 +22,10 @@ leaderBoardBtn.addEventListener('click', async () => {
     }
 });
 
-const ispremiumuser = async() => {
+const ispremiumuser = async () => {
     try {
-        const response = await axios.get('http://localhost:4000/premium/premiumStatus', { headers: {"Authorization": token} });
-        if(response.data.isPremium){
+        const response = await axios.get('http://localhost:4000/premium/premiumStatus', { headers: { "Authorization": token } });
+        if (response.data.isPremium) {
             premiumButton.style.display = 'none';
             premiumTitle.style.display = 'block';
         }
@@ -40,11 +40,13 @@ form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const expense_amount = document.getElementById('expense_amount').value;
     const expense_description = document.getElementById('expense_description').value;
-    const category = document.getElementById('category').value;
+    const geminiCategory = await axios.get(`http://localhost:4000/gemini/getCategory?des=${expense_description}`);
+    console.log(geminiCategory);
+    let category =  geminiCategory.data.response.candidates[0].content.parts[0].text.slice(2,-2)? geminiCategory.data.response.candidates[0].content.parts[0].text : 'Others';
     try {
         const response = await axios.post('http://localhost:4000/expense/addExpense', {
-            expense_amount, expense_description, category
-        } , { headers: {"Authorization": token} });
+            expense_amount, expense_description, category: category
+        }, { headers: { "Authorization": token } });
         loadExpenses();
         console.log(response.data);
         alert('Expense added successfully!');
@@ -56,7 +58,7 @@ form.addEventListener('submit', async (e) => {
 
 const loadExpenses = async () => {
     try {
-        const response = await axios.get('http://localhost:4000/expense/getExpenses' , { headers: {"Authorization": token} });
+        const response = await axios.get('http://localhost:4000/expense/getExpenses', { headers: { "Authorization": token } });
         const expenses = response.data.expenses;
         const expenseList = document.getElementById('expense_list');
         expenseList.innerHTML = '';
@@ -73,12 +75,12 @@ const loadExpenses = async () => {
 
 const deleteExpense = async (id) => {
     try {
-        await axios.delete(`http://localhost:4000/expense/deleteExpense/${id}` , { headers: {"Authorization": token} });
+        await axios.delete(`http://localhost:4000/expense/deleteExpense/${id}`, { headers: { "Authorization": token } });
         loadExpenses();
-    } catch (error) {   
+    } catch (error) {
         console.error('Error deleting expense:', error);
     }
-};  
+};
 
 
 loadExpenses();
