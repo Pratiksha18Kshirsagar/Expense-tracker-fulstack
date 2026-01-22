@@ -13,7 +13,7 @@ leaderBoardBtn.addEventListener('click', async () => {
         leaderBoardList.innerHTML = '';
         leaderboardData.forEach(user => {
             const li = document.createElement('li');
-            li.textContent = `Name: ${user.name}, Total Expense: ${user.total_expense == null ? 0 : user.total_expense}`;
+            li.textContent = `Name: ${user.name}, Total Expense: ${user.totalExpense == null ? 0 : user.totalExpense}`;
             leaderBoardList.appendChild(li);
         });
     }
@@ -40,9 +40,13 @@ form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const expense_amount = document.getElementById('expense_amount').value;
     const expense_description = document.getElementById('expense_description').value;
+
     const geminiCategory = await axios.get(`http://localhost:4000/gemini/getCategory?des=${expense_description}`);
+
     console.log(geminiCategory);
-    let category =  geminiCategory.data.response.candidates[0].content.parts[0].text.slice(2,-2)? geminiCategory.data.response.candidates[0].content.parts[0].text : 'Others';
+    let categoryContent = geminiCategory.data.response.candidates[0].content;
+    console.log(categoryContent);   
+    let category = categoryContent != {} ? categoryContent.parts[0].text : 'Others';
     try {
         const response = await axios.post('http://localhost:4000/expense/addExpense', {
             expense_amount, expense_description, category: category
@@ -64,7 +68,7 @@ const loadExpenses = async () => {
         expenseList.innerHTML = '';
         expenses.forEach(expense => {
             const li = document.createElement('li');
-            li.innerHTML = `${expense.expense_description} - ${expense.expense_amount} [${expense.category}] - <button onclick="deleteExpense(${expense.id})">Delete-Expense</button>`;
+            li.innerHTML = `${expense.expense_description} - ${expense.expense_amount} [${expense.category}] - <button onclick="deleteExpense(${expense.id},${expense.expense_amount})">Delete-Expense</button>`;
             expenseList.appendChild(li);
         });
     } catch (error) {
@@ -73,9 +77,9 @@ const loadExpenses = async () => {
 };
 
 
-const deleteExpense = async (id) => {
+const deleteExpense = async (id,expense_amt) => {
     try {
-        await axios.delete(`http://localhost:4000/expense/deleteExpense/${id}`, { headers: { "Authorization": token } });
+        await axios.delete(`http://localhost:4000/expense/deleteExpense/${id}?expense_amount=${expense_amt}`, { headers: { "Authorization": token } });
         loadExpenses();
     } catch (error) {
         console.error('Error deleting expense:', error);
