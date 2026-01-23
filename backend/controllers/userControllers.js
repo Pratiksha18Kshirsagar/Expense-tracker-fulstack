@@ -2,7 +2,7 @@ const UserModel = require('../models/user.js');
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { sendResetEmail } = require("../services/emailService.js");
-
+const ForgotPasswordRequest = require('../models/forgetPasswordRequest.js');
 
 const createUser = async (req, res) => {
     try {
@@ -67,33 +67,42 @@ const loginUser = async (req, res) => {
 
 const forgotPassword = async (req, res) => {
     const { email } = req.body;
-    console.log("Forgot Password Request for:", email);
 
     const user = await UserModel.findOne({ where: { email } });
-    console.log("User Found:", user.id);
-
     if (!user) return res.status(404).json({ message: "User not found" });
-    
-    const resetLink = `http://localhost:4000/user/reset-password/${user.id}`;
-    await sendResetEmail(user.email, resetLink);
-    res.json({ message: "Reset link sent" });
+
+    const request = await ForgotPasswordRequest.create({
+        userId: user.id
+    });
+
+    const resetLink = `http://localhost:4000/user/password/resetpassword/${request.id}`;
+
+        await sendResetEmail(user.email, resetLink);
+
+    res.json({ message: "Reset link sent to email" });
 };
 
-
 const resetPassword = async (req, res) => {
-    const { userId } = req.params;
+    const { uuid } = req.params;
     const { newPassword } = req.body;
 
-    const user = await UserModel.findByPk(userId);
-    if (!user) return res.status(404).json({ message: "Invalid user" });
+    const request = await ForgotPasswordRequest.findOne({
+        where: { id: uuid, isActive: true }
+    });
 
-    const hashed = await bcrypt.hash(newPassword, 10);
-    user.password = hashed;
+    if (!request) {
+        return res.status(400).json({ message: "Link expired or invalid" });
+    }
 
+    const user = await UserModel.findByPk(request.userId);
+
+    user.password = await bcrypt.hash(newPassword, 10);
     await user.save();
+
+    request.isActive = false;
+    await request.save();
 
     res.json({ message: "Password reset successful" });
 };
-
 
 module.exports = { createUser, loginUser, forgotPassword, resetPassword };
