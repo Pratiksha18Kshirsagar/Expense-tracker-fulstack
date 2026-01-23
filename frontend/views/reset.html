@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form id="resetForm">
+        <input type="password" id="password" placeholder="New password" required />
+        <button>Reset</button>
+    </form>
+
+    <script>
+        const userId = window.location.pathname.split("/").pop();
+
+        document.getElementById("resetForm").onsubmit = async (e) => {
+            e.preventDefault();
+            const password = document.getElementById("password").value;
+
+            await fetch(`http://localhost:4000/user/reset-password/${userId}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ newPassword: password })
+            });
+        alert("Password updated");
+};
+    </script>
+</body>
+
+</html>
