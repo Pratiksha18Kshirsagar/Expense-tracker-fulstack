@@ -13,14 +13,29 @@
         <input type="number" name="expense_amount" id="expense_amount">
         <label for="expense_description">Expense Description:</label>
         <input type="text" name="expense_description" id="expense_description">
-        
+
         <button type="submit" id="submit_expense">Submit Expense</button>
     </form>
-<p id="premiumTitle">You are a premium user <button id="leaderBoard">Show leader board</button><button><a href="../views/report.html">Show report</a></button></p>
+    <p id="premiumTitle">You are a premium user <button id="leaderBoard">Show leader board</button><button><a
+                href="../views/report.html">Show report</a></button></p>
+    <div style="margin-bottom: 10px;">
+        <label for="pageSize">Expenses per page:</label>
+        <select id="pageSize">
+             <option value="2">2</option>
+             <option value="3">3</option>
+            <option value="5">5</option>
+            <option value="8">8</option>
+            <option value="10" selected>10</option>
+            <option value="20">20</option>
+            <option value="40">40</option>
+        </select>
+    </div>
+
 
     <ul id="expense_list">
 
     </ul>
+    <div id="pagination"></div>
 
     <ul id="leaderBoardList">
 
@@ -28,7 +43,7 @@
 
     <button id="premiumBtn"><a href="../views/pay.html">Buy Premium Membership</a></button>
     <script src="https://sdk.cashfree.com/js/ui/2.0.0/cashfree.sandbox.js"></script>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="../scripts/expense.js"></script>
 </body>

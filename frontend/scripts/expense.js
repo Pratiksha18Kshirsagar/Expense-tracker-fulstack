@@ -1,91 +1,144 @@
-const form = document.querySelector('form');
-const token = localStorage.getItem('token');
-const premiumButton = document.getElementById('premiumBtn');
-const premiumTitle = document.getElementById('premiumTitle');
-premiumTitle.style.display = 'none';
-const leaderBoardBtn = document.getElementById('leaderBoard');
-const leaderBoardList = document.getElementById('leaderBoardList');
+const form = document.querySelector('form')
+const token = localStorage.getItem('token')
 
+const premiumButton = document.getElementById('premiumBtn')
+const premiumTitle = document.getElementById('premiumTitle')
+premiumTitle.style.display = 'none'
+
+const leaderBoardBtn = document.getElementById('leaderBoard')
+const leaderBoardList = document.getElementById('leaderBoardList')
+
+const expenseList = document.getElementById('expense_list')
+const paginationDiv = document.getElementById('pagination')
+const pageSizeSelect = document.getElementById('pageSize')
+
+let allExpenses = []
+let currentPage = 1
+let expensesPerPage = Number(pageSizeSelect.value)
+
+/* ---------- PAGE SIZE CHANGE ---------- */
+pageSizeSelect.addEventListener('change', () => {
+  expensesPerPage = Number(pageSizeSelect.value)
+  currentPage = 1
+  renderExpenses()
+  renderPagination()
+})
+
+/* ---------- LEADERBOARD ---------- */
 leaderBoardBtn.addEventListener('click', async () => {
-    try {
-        const response = await axios.get('http://localhost:4000/premium/leaderboard', { headers: { "Authorization": token } });
-        const leaderboardData = response.data;
-        leaderBoardList.innerHTML = '';
-        leaderboardData.forEach(user => {
-            const li = document.createElement('li');
-            li.textContent = `Name: ${user.name}, Total Expense: ${user.totalExpense == null ? 0 : user.totalExpense}`;
-            leaderBoardList.appendChild(li);
-        });
-    }
-    catch (error) {
-        console.error('Error fetching leaderboard:', error);
-    }
-});
+  const res = await axios.get('http://localhost:4000/premium/leaderboard', {
+    headers: { Authorization: token }
+  })
 
+  leaderBoardList.innerHTML = ''
+  res.data.forEach(u => {
+    const li = document.createElement('li')
+    li.textContent = `Name: ${u.name}, Total Expense: ${u.totalExpense ?? 0}`
+    leaderBoardList.appendChild(li)
+  })
+})
+
+/* ---------- PREMIUM STATUS ---------- */
 const ispremiumuser = async () => {
-    try {
-        const response = await axios.get('http://localhost:4000/premium/premiumStatus', { headers: { "Authorization": token } });
-        if (response.data.isPremium) {
-            premiumButton.style.display = 'none';
-            premiumTitle.style.display = 'block';
-        }
-    }
-    catch (error) {
-        console.error('Error fetching premium status:', error);
-    }
-};
-ispremiumuser();
+  const res = await axios.get('http://localhost:4000/premium/premiumStatus', {
+    headers: { Authorization: token }
+  })
 
-form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const expense_amount = document.getElementById('expense_amount').value;
-    const expense_description = document.getElementById('expense_description').value;
+  if (res.data.isPremium) {
+    premiumButton.style.display = 'none'
+    premiumTitle.style.display = 'block'
+  }
+}
+ispremiumuser()
 
-    const geminiCategory = await axios.get(`http://localhost:4000/gemini/getCategory?des=${expense_description}`);
+/* ---------- ADD EXPENSE ---------- */
+form.addEventListener('submit', async e => {
+  e.preventDefault()
 
-    console.log(geminiCategory);
-    let categoryContent = geminiCategory.data.response.candidates[0].content;
-    console.log(categoryContent);   
-    let category = categoryContent != {} ? categoryContent.parts[0].text : 'Others';
-    try {
-        const response = await axios.post('http://localhost:4000/expense/addExpense', {
-            expense_amount, expense_description, category: category
-        }, { headers: { "Authorization": token } });
-        loadExpenses();
-        console.log(response.data);
-        alert('Expense added successfully!');
-    } catch (error) {
-        console.error('Error:', error);
-        alert('An unexpected error occurred.');
-    }
-});
+  const expense_amount = document.getElementById('expense_amount').value
+  const expense_description = document.getElementById('expense_description').value
 
+  const geminiRes = await axios.get(
+    `http://localhost:4000/gemini/getCategory?des=${expense_description}`
+  )
+
+  const category =
+    geminiRes.data?.response?.candidates?.[0]?.content?.parts?.[0]?.text ||
+    'Others'
+
+  await axios.post(
+    'http://localhost:4000/expense/addExpense',
+    { expense_amount, expense_description, category },
+    { headers: { Authorization: token } }
+  )
+
+  loadExpenses()
+})
+
+/* ---------- LOAD EXPENSES ---------- */
 const loadExpenses = async () => {
-    try {
-        const response = await axios.get('http://localhost:4000/expense/getExpenses', { headers: { "Authorization": token } });
-        const expenses = response.data.expenses;
-        const expenseList = document.getElementById('expense_list');
-        expenseList.innerHTML = '';
-        expenses.forEach(expense => {
-            const li = document.createElement('li');
-            li.innerHTML = `${expense.expense_description} - ${expense.expense_amount} [${expense.category}] - <button onclick="deleteExpense(${expense.id},${expense.expense_amount})">Delete-Expense</button>`;
-            expenseList.appendChild(li);
-        });
-    } catch (error) {
-        console.error('Error fetching expenses:', error);
-    }
-};
+  const res = await axios.get('http://localhost:4000/expense/getExpenses', {
+    headers: { Authorization: token }
+  })
 
+  allExpenses = res.data.expenses
 
-const deleteExpense = async (id,expense_amt) => {
-    try {
-        await axios.delete(`http://localhost:4000/expense/deleteExpense/${id}?expense_amount=${expense_amt}`, { headers: { "Authorization": token } });
-        loadExpenses();
-    } catch (error) {
-        console.error('Error deleting expense:', error);
-    }
-};
+  const totalPages = Math.ceil(allExpenses.length / expensesPerPage)
+  if (currentPage > totalPages) currentPage = totalPages || 1
 
+  renderExpenses()
+  renderPagination()
+}
 
-loadExpenses();
+/* ---------- RENDER EXPENSES ---------- */
+const renderExpenses = () => {
+  expenseList.innerHTML = ''
 
+  const start = (currentPage - 1) * expensesPerPage
+  const end = start + expensesPerPage
+
+  allExpenses.slice(start, end).forEach(exp => {
+    const li = document.createElement('li')
+    li.innerHTML = `
+      ${exp.expense_description} - ${exp.expense_amount} [${exp.category}]
+      <button onclick="deleteExpense(${exp.id}, ${exp.expense_amount})">
+        Delete-Expense
+      </button>
+    `
+    expenseList.appendChild(li)
+  })
+}
+
+/* ---------- PAGINATION ---------- */
+const renderPagination = () => {
+  paginationDiv.innerHTML = ''
+
+  const totalPages = Math.ceil(allExpenses.length / expensesPerPage)
+
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement('button')
+    btn.textContent = i
+    btn.disabled = i === currentPage
+
+    btn.addEventListener('click', () => {
+      currentPage = i
+      renderExpenses()
+      renderPagination()
+    })
+
+    paginationDiv.appendChild(btn)
+  }
+}
+
+/* ---------- DELETE EXPENSE ---------- */
+window.deleteExpense = async (id, expense_amt) => {
+  await axios.delete(
+    `http://localhost:4000/expense/deleteExpense/${id}?expense_amount=${expense_amt}`,
+    { headers: { Authorization: token } }
+  )
+
+  loadExpenses()
+}
+
+/* ---------- INITIAL LOAD ---------- */
+loadExpenses()
