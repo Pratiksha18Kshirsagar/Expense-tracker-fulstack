@@ -6,11 +6,12 @@ const sequelize = require('../utils/db');
 const addExpense = async (req, res) => {
     const t = await sequelize.transaction();
     try {
-        const { expense_amount, expense_description, category } = req.body;
+        const { expense_amount, expense_description, category ,note} = req.body;
         const newExpense = await ExpenseModel.create({
             expense_amount,
             expense_description,
             category,
+            note,
             userId: req.user.id
         }
     , { transaction: t });

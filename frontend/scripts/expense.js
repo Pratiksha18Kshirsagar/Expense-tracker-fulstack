@@ -57,6 +57,7 @@ form.addEventListener('submit', async e => {
 
   const expense_amount = document.getElementById('expense_amount').value
   const expense_description = document.getElementById('expense_description').value
+    const note = document.getElementById('note').value
 
   const geminiRes = await axios.get(
     `http://localhost:4000/gemini/getCategory?des=${expense_description}`
@@ -68,7 +69,7 @@ form.addEventListener('submit', async e => {
 
   await axios.post(
     'http://localhost:4000/expense/addExpense',
-    { expense_amount, expense_description, category },
+    { expense_amount, expense_description, category ,note},
     { headers: { Authorization: token } }
   )
 
