@@ -3,17 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Page</title>
+    <title>Upgrade to Premium</title>
+    <link rel="stylesheet" href="../styles/payment.css">
+    <style>
+        /* ===== RESET ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ===== BODY ===== */
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: linear-gradient(
+        135deg,
+        #f3f5ff 0%,
+        #eef1ff 40%,
+        #f9f6ff 100%
+    );
+}
+
+/* ===== PAYMENT CARD ===== */
+.payment-card {
+    background: #ffffff;
+    padding: 40px 45px;
+    max-width: 420px;
+    width: 100%;
+    border-radius: 18px;
+    text-align: center;
+
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading */
+.payment-card h1 {
+    font-size: 24px;
+    color: #1e1f3b;
+    margin-bottom: 10px;
+}
+
+/* Subtitle */
+.subtitle {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+/* Features list */
+.features {
+    list-style: none;
+    text-align: left;
+    margin-bottom: 30px;
+}
+
+.features li {
+    font-size: 15px;
+    color: #2d2f45;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+/* ===== PAY BUTTON ===== */
+#renderBtn {
+    padding: 14px 36px;
+    font-size: 17px;
+    font-weight: 700;
+
+    border: none;
+    border-radius: 999px;
+
+    background: linear-gradient(135deg, #f5d37a, #e6b85c);
+    color: #1e1f3b;
+
+    cursor: pointer;
+    transition: all 0.25s ease;
+
+    box-shadow: 0 10px 24px rgba(230, 184, 92, 0.35);
+}
+
+#renderBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(230, 184, 92, 0.45);
+}
+
+    </style>
 </head>
 <body>
-    <button id="renderBtn">Pay Now</button>
-    <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
 
-<script>
-    const cashfree = Cashfree({
-        mode: "sandbox"
-    });
-</script>
+    <div class="payment-card">
+        <h1>Upgrade to Premium 👑</h1>
+        <p class="subtitle">Unlock powerful features to manage your expenses better</p>
+
+        <ul class="features">
+            <li>🏆 View the complete leaderboard</li>
+            <li>📊 Generate detailed expense reports</li>
+            <li>⬇️ Download all your expenses</li>
+            <li>⚡ Faster & enhanced experience</li>
+        </ul>
+
+        <button id="renderBtn">Pay Now</button>
+    </div>
+
+    <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
+    <script>
+        const cashfree = Cashfree({ mode: "sandbox" });
+    </script>
     <script src="/frontend/scripts/cashfreeWeb_self.js"></script>
+
 </body>
 </html>

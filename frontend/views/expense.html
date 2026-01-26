@@ -5,9 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="../styles/expense.css">
+
 </head>
 
 <body>
+    <!-- <button id="logoutBtn">Logout</button> -->
+     <nav class="navbar">
+    <div class="nav-left">
+        <span class="logo">💸 Expense Tracker</span>
+    </div>
+
+    <div class="nav-right">
+        <button id="logoutBtn">Logout</button>
+    </div>
+</nav>
+
+
     <form action="">
         <label for="expense_amount">Choose Expense Amount:</label>
         <input type="number" name="expense_amount" id="expense_amount">
@@ -19,12 +33,13 @@
         <button type="submit" id="submit_expense">Submit Expense</button>
     </form>
     <p id="premiumTitle">You are a premium user <button id="leaderBoard">Show leader board</button><button><a
-                href="../views/report.html">Show report</a></button></p>
+                href="../views/report.html">Show report</a></button><button id="downloadBtn">Download Expenses</button>
+    </p>
     <div style="margin-bottom: 10px;">
         <label for="pageSize">Expenses per page:</label>
         <select id="pageSize">
-             <option value="2">2</option>
-             <option value="3">3</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
             <option value="5">5</option>
             <option value="8">8</option>
             <option value="10" selected>10</option>

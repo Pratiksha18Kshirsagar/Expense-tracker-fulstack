@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="../styles/forgot.css">
+
 </head>
 
 <body>
@@ -14,11 +16,12 @@
     </form>
 
     <script>
+        const baseUrl = 'http://localhost:4000';
         document.getElementById("forgotForm").onsubmit = async (e) => {
             e.preventDefault();
             const email = document.getElementById("email").value;
 
-            await fetch("http://localhost:4000/user/forgot-password", {
+            await fetch(`${baseUrl}/user/forgot-password`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email })

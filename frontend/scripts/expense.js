@@ -1,3 +1,5 @@
+const baseUrl = 'http://13.60.5.145:4000'
+
 const form = document.querySelector('form')
 const token = localStorage.getItem('token')
 
@@ -26,7 +28,7 @@ pageSizeSelect.addEventListener('change', () => {
 
 /* ---------- LEADERBOARD ---------- */
 leaderBoardBtn.addEventListener('click', async () => {
-  const res = await axios.get('http://localhost:4000/premium/leaderboard', {
+  const res = await axios.get(`${baseUrl}/premium/leaderboard`, {
     headers: { Authorization: token }
   })
 
@@ -40,7 +42,7 @@ leaderBoardBtn.addEventListener('click', async () => {
 
 /* ---------- PREMIUM STATUS ---------- */
 const ispremiumuser = async () => {
-  const res = await axios.get('http://localhost:4000/premium/premiumStatus', {
+  const res = await axios.get(`${baseUrl}/premium/premiumStatus`, {
     headers: { Authorization: token }
   })
 
@@ -57,10 +59,10 @@ form.addEventListener('submit', async e => {
 
   const expense_amount = document.getElementById('expense_amount').value
   const expense_description = document.getElementById('expense_description').value
-    const note = document.getElementById('note').value
+  const note = document.getElementById('note').value
 
   const geminiRes = await axios.get(
-    `http://localhost:4000/gemini/getCategory?des=${expense_description}`
+    `${baseUrl}/gemini/getCategory?des=${expense_description}`
   )
 
   const category =
@@ -68,8 +70,8 @@ form.addEventListener('submit', async e => {
     'Others'
 
   await axios.post(
-    'http://localhost:4000/expense/addExpense',
-    { expense_amount, expense_description, category ,note},
+    `${baseUrl}/expense/addExpense`,
+    { expense_amount, expense_description, category, note },
     { headers: { Authorization: token } }
   )
 
@@ -78,7 +80,7 @@ form.addEventListener('submit', async e => {
 
 /* ---------- LOAD EXPENSES ---------- */
 const loadExpenses = async () => {
-  const res = await axios.get('http://localhost:4000/expense/getExpenses', {
+  const res = await axios.get(`${baseUrl}/expense/getExpenses`, {
     headers: { Authorization: token }
   })
 
@@ -134,7 +136,7 @@ const renderPagination = () => {
 /* ---------- DELETE EXPENSE ---------- */
 window.deleteExpense = async (id, expense_amt) => {
   await axios.delete(
-    `http://localhost:4000/expense/deleteExpense/${id}?expense_amount=${expense_amt}`,
+    `${baseUrl}/expense/deleteExpense/${id}?expense_amount=${expense_amt}`,
     { headers: { Authorization: token } }
   )
 
@@ -143,3 +145,40 @@ window.deleteExpense = async (id, expense_amt) => {
 
 /* ---------- INITIAL LOAD ---------- */
 loadExpenses()
+
+
+const downloadBtn = document.getElementById('downloadBtn');
+downloadBtn.addEventListener('click', async () => {
+  try {
+    downloadBtn.disabled = true;
+    downloadBtn.innerText = 'Preparing download...';
+
+    const res = await axios.get(`${baseUrl}/expense/download`, {
+      headers: { Authorization: token }
+    });
+
+    const fileUrl = res.data.fileUrl;
+
+    const a = document.createElement('a');
+    a.href = fileUrl;
+    a.download = `expenses-${Date.now()}.xlsx`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+  } catch (err) {
+    if (err.response && err.response.status === 401) {
+      alert('Only premium users can download expenses');
+    } else {
+      alert('Download failed');
+    }
+  } finally {
+    downloadBtn.disabled = false;
+    downloadBtn.innerText = 'Download Expenses';
+  }
+});
+
+document.getElementById("logoutBtn").addEventListener("click", () => {
+    localStorage.removeItem("token");
+    window.location.href = "../views/login.html";
+});

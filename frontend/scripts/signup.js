@@ -1,3 +1,4 @@
+const baseUrl = 'http://13.60.5.145:4000';
 const form = document.querySelector('form');
 
 form.addEventListener('submit', async (e) => {
@@ -6,7 +7,7 @@ form.addEventListener('submit', async (e) => {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     try {
-        const response = await axios.post('http://localhost:4000/user/signup', {
+        const response = await axios.post(`${baseUrl}/user/signup`, {
             name,
             email,
             password

@@ -1,0 +1,292 @@
+/* ===== RESET ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ===== BODY (PREMIUM BACKGROUND) ===== */
+body {
+     padding-top: 80px; 
+    min-height: 100vh;
+    /* padding: 30px; */
+
+    background: linear-gradient(
+        135deg,
+        #f3f5ff 0%,
+        #eef1ff 40%,
+        #f9f6ff 100%
+    );
+}
+
+/* ===== FORM CONTAINER ===== */
+form {
+    max-width: 1250px;
+    margin: auto;
+    background: #ffffff;
+    padding: 32px 42px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    column-gap: 40px;
+    row-gap: 16px;
+}
+
+/* ===== LABELS ===== */
+form label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2d2f45;
+    margin-bottom: 4px;
+    display: block;
+}
+
+/* ===== INPUTS ===== */
+form input {
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 10px;
+    border: 1px solid #cfcfcf;
+    font-size: 15px;
+}
+
+form input:focus {
+    outline: none;
+    border-color: #6c7cf5;
+}
+
+/* ===== NOTE FIELD ===== */
+#note {
+    grid-column: 2 / 3;
+}
+
+/* ===== SUBMIT BUTTON ===== */
+#submit_expense {
+    grid-column: 1 / -1;
+    justify-self: center;
+    margin-top: 18px;
+
+    padding: 9px 26px;
+    font-size: 15px;
+    border-radius: 999px;
+    border: none;
+    background: linear-gradient(135deg, #6c7cf5, #5a6bf0);
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#submit_expense:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(108, 124, 245, 0.35);
+}
+
+/* ===== PREMIUM SECTION ===== */
+#premiumTitle {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 18px 20px;
+    border-radius: 14px;
+
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 18px;
+
+    background: linear-gradient(135deg, #1e1f3b, #2d2f5f);
+    color: #f5d37a;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+/* ===== PREMIUM BUTTONS ===== */
+#premiumTitle button {
+    margin-left: 10px;              /* 👈 adds space between buttons */
+    padding: 8px 18px;
+    background: linear-gradient(135deg, #f5d37a, #e6b85c);
+    color: #1e1f3b;
+    border: none;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+
+#premiumTitle button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(245, 211, 122, 0.45);
+}
+
+#premiumTitle a {
+    color: #1e1f3b;
+    text-decoration: none;
+}
+
+/* ===== PAGE SIZE ===== */
+div {
+    max-width: 1200px;
+    margin: 15px auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+select {
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+/* ===== EXPENSE LIST ===== */
+#expense_list {
+    max-width: 1200px;
+    margin: 20px auto;
+    list-style: none;
+}
+
+#expense_list li {
+    background: #ffffff;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* ===== DELETE BUTTON ===== */
+#expense_list li button {
+    background: linear-gradient(135deg, #ff4d4f, #e63946);
+    color: #ffffff;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+#expense_list li button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(230, 57, 70, 0.4);
+}
+
+/* ===== PAGINATION ===== */
+#pagination {
+    max-width: 1200px;
+    margin: 15px auto;
+    text-align: center;
+}
+
+#pagination button {
+    margin: 5px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: none;
+    background: #6c7cf5;
+    color: #fff;
+    cursor: pointer;
+}
+
+#pagination button:hover {
+    background: #5a6bf0;
+}
+
+/* ===== LEADERBOARD ===== */
+#leaderBoardList {
+    max-width: 600px;
+    margin: 30px auto;
+    list-style: none;
+}
+
+#leaderBoardList li {
+    background: #ffffff;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+}
+
+/* ===== BUY PREMIUM ===== */
+#premiumBtn {
+    display: block;
+    margin: 30px auto;
+    padding: 9px 22px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #f5d37a, #e6b85c);
+    border: none;
+}
+
+#premiumBtn a {
+    color: #1e1f3b;
+    text-decoration: none;
+    font-weight: 700;
+}
+/* ===== NAVBAR ===== */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+
+    background: linear-gradient(135deg, #1e1f3b, #2d2f5f);
+    color: #f5d37a;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 40px;
+    z-index: 1000;
+
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== NAVBAR LOGO ===== */
+.logo {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: #f5d37a;
+}
+
+/* ===== NAV RIGHT ===== */
+.nav-right {
+    display: flex;
+    align-items: center;
+}
+
+/* ===== LOGOUT BUTTON (NAV) ===== */
+#logoutBtn {
+    padding: 8px 18px;
+    border-radius: 999px;
+    border: none;
+
+    background: linear-gradient(135deg, #ff6b6b, #e63946);
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+    box-shadow: 0 6px 14px rgba(230, 57, 70, 0.35);
+}
+
+#logoutBtn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 20px rgba(230, 57, 70, 0.45);
+}

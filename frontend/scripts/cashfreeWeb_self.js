@@ -1,8 +1,9 @@
+const baseUrl = 'http://13.60.5.145:4000';
 document.getElementById("renderBtn").addEventListener("click", async () => {
     try {
         let token = localStorage.getItem("token");
         //  Send token in Authorization header
-        const response = await fetch("http://localhost:4000/payment/pay", {
+        const response = await fetch(`${baseUrl}/payment/pay`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

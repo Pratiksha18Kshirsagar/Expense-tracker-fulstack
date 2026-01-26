@@ -1,3 +1,4 @@
+const baseUrl = 'http://13.60.5.145:4000';
 const { Cashfree, CFEnvironment } = require("cashfree-pg");
 const env = CFEnvironment.SANDBOX;
 
@@ -24,7 +25,7 @@ exports.createOrder = async (orderId, orderAmount, orderCurrency='INR', customer
             },
             payment_methods: "cc,nb,upi,paylater",
             order_meta: {
-                return_url: `http://localhost:4000/payment/payment-status?order_id=${orderId}&user_id=${customerId}`,
+                return_url: `${baseUrl}/payment/payment-status?order_id=${orderId}&user_id=${customerId}`,
             },
             order_expiry_time: formattedExpiryDate,
         };

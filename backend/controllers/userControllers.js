@@ -1,3 +1,4 @@
+const baseUrl = 'http://13.60.5.145:4000';
 const UserModel = require('../models/user.js');
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -75,7 +76,7 @@ const forgotPassword = async (req, res) => {
         userId: user.id
     });
 
-    const resetLink = `http://localhost:4000/user/password/resetpassword/${request.id}`;
+    const resetLink = `${baseUrl}/user/password/resetpassword/${request.id}`;
 
         await sendResetEmail(user.email, resetLink);
 
