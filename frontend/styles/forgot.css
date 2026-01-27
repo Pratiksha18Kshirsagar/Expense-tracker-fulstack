@@ -15,20 +15,20 @@ body {
 
     background: linear-gradient(
         135deg,
-        #f3f5ff 0%,
-        #eef1ff 40%,
-        #f9f6ff 100%
+        #f4f6ff 0%,
+        #eef2ff 45%,
+        #faf9ff 100%
     );
 }
 
 /* ===== FORM CARD ===== */
 #forgotForm {
     background: #ffffff;
-    padding: 32px 36px;
+    padding: 34px 38px;
     width: 100%;
     max-width: 380px;
-    border-radius: 16px;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    border-radius: 18px;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.1);
 
     display: flex;
     flex-direction: column;
@@ -39,8 +39,13 @@ body {
 #forgotForm input {
     padding: 12px 14px;
     border-radius: 10px;
-    border: 1px solid #cfcfcf;
+    border: 1px solid #d4d8ff;
     font-size: 15px;
+    color: #2d2f45;
+}
+
+#forgotForm input::placeholder {
+    color: #8b8fae;
 }
 
 #forgotForm input:focus {
@@ -50,7 +55,7 @@ body {
 
 /* ===== BUTTON ===== */
 #forgotForm button {
-    padding: 10px;
+    padding: 11px;
     border-radius: 999px;
     border: none;
 
@@ -60,10 +65,10 @@ body {
     font-weight: 600;
 
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: all 0.25s ease;
 }
 
 #forgotForm button:hover {
     transform: translateY(-1px);
-    box-shadow: 0 6px 14px rgba(108, 124, 245, 0.35);
+    box-shadow: 0 8px 18px rgba(108, 124, 245, 0.35);
 }

@@ -1,4 +1,4 @@
-const baseUrl = 'http://13.60.5.145:4000'
+const baseUrl = 'https://exams-forget-eval-builder.trycloudflare.com'
 
 const form = document.querySelector('form')
 const token = localStorage.getItem('token')

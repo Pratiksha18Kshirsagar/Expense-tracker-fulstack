@@ -1,4 +1,4 @@
-const baseUrl = 'http://13.60.5.145:4000';
+const baseUrl = 'https://exams-forget-eval-builder.trycloudflare.com';
 document.getElementById("renderBtn").addEventListener("click", async () => {
     try {
         let token = localStorage.getItem("token");
