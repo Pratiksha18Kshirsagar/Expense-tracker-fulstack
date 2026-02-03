@@ -1,4 +1,4 @@
-const baseUrl = 'https://exams-forget-eval-builder.trycloudflare.com'
+const baseUrl = 'http://localhost:4000'
 
 const form = document.querySelector('form')
 const token = localStorage.getItem('token')
@@ -18,7 +18,7 @@ let allExpenses = []
 let currentPage = 1
 let expensesPerPage = Number(pageSizeSelect.value)
 
-/* ---------- PAGE SIZE CHANGE ---------- */
+/*  PAGE SIZE CHANGE  */
 pageSizeSelect.addEventListener('change', () => {
   expensesPerPage = Number(pageSizeSelect.value)
   currentPage = 1
@@ -26,7 +26,7 @@ pageSizeSelect.addEventListener('change', () => {
   renderPagination()
 })
 
-/* ---------- LEADERBOARD ---------- */
+/*  LEADERBOARD  */
 leaderBoardBtn.addEventListener('click', async () => {
   const res = await axios.get(`${baseUrl}/premium/leaderboard`, {
     headers: { Authorization: token }
@@ -40,7 +40,7 @@ leaderBoardBtn.addEventListener('click', async () => {
   })
 })
 
-/* ---------- PREMIUM STATUS ---------- */
+/*PREMIUM STATUS */
 const ispremiumuser = async () => {
   const res = await axios.get(`${baseUrl}/premium/premiumStatus`, {
     headers: { Authorization: token }
@@ -53,32 +53,35 @@ const ispremiumuser = async () => {
 }
 ispremiumuser()
 
-/* ---------- ADD EXPENSE ---------- */
+/*  ADD EXPENSE*/
 form.addEventListener('submit', async e => {
   e.preventDefault()
 
-  const expense_amount = document.getElementById('expense_amount').value
-  const expense_description = document.getElementById('expense_description').value
-  const note = document.getElementById('note').value
+  let expense_amount = document.getElementById('expense_amount').value
+  let expense_description = document.getElementById('expense_description').value
+  let note = document.getElementById('note').value
 
   const geminiRes = await axios.get(
     `${baseUrl}/gemini/getCategory?des=${expense_description}`
   )
 
   const category =
-    geminiRes.data?.response?.candidates?.[0]?.content?.parts?.[0]?.text ||
+    geminiRes.data?.response?.candidates?.[0]?.content?.parts?.[0]?.text.slice(2,-2) ||
     'Others'
 
   await axios.post(
     `${baseUrl}/expense/addExpense`,
     { expense_amount, expense_description, category, note },
     { headers: { Authorization: token } }
-  )
-
+  );
+  
+  expense_amount = "";
+  expense_description = "";
+  note = "";
   loadExpenses()
 })
 
-/* ---------- LOAD EXPENSES ---------- */
+/*LOAD EXPENSES*/
 const loadExpenses = async () => {
   const res = await axios.get(`${baseUrl}/expense/getExpenses`, {
     headers: { Authorization: token }
@@ -93,7 +96,7 @@ const loadExpenses = async () => {
   renderPagination()
 }
 
-/* ---------- RENDER EXPENSES ---------- */
+/*RENDER EXPENSES  */
 const renderExpenses = () => {
   expenseList.innerHTML = ''
 
@@ -103,7 +106,7 @@ const renderExpenses = () => {
   allExpenses.slice(start, end).forEach(exp => {
     const li = document.createElement('li')
     li.innerHTML = `
-      ${exp.expense_description} - ${exp.expense_amount} [${exp.category}]
+      ${exp.expense_description} - ${exp.expense_amount} [${exp.category}] 
       <button onclick="deleteExpense(${exp.id}, ${exp.expense_amount})">
         Delete-Expense
       </button>
@@ -112,7 +115,7 @@ const renderExpenses = () => {
   })
 }
 
-/* ---------- PAGINATION ---------- */
+/* PAGINATION  */
 const renderPagination = () => {
   paginationDiv.innerHTML = ''
 
@@ -133,7 +136,7 @@ const renderPagination = () => {
   }
 }
 
-/* ---------- DELETE EXPENSE ---------- */
+/* DELETE EXPENSE */
 window.deleteExpense = async (id, expense_amt) => {
   await axios.delete(
     `${baseUrl}/expense/deleteExpense/${id}?expense_amount=${expense_amt}`,
@@ -143,7 +146,7 @@ window.deleteExpense = async (id, expense_amt) => {
   loadExpenses()
 }
 
-/* ---------- INITIAL LOAD ---------- */
+
 loadExpenses()
 
 
@@ -179,6 +182,6 @@ downloadBtn.addEventListener('click', async () => {
 });
 
 document.getElementById("logoutBtn").addEventListener("click", () => {
-    localStorage.removeItem("token");
-    window.location.href = "../views/login.html";
+  localStorage.removeItem("token");
+  window.location.href = "../views/login.html";
 });

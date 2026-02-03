@@ -1,4 +1,4 @@
-const baseUrl = 'https://exams-forget-eval-builder.trycloudflare.com';
+const baseUrl = 'http://localhost:4000';
 const form = document.querySelector('form');
 
 form.addEventListener('submit', async (e) => {
