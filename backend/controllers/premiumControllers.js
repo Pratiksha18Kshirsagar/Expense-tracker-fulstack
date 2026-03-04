@@ -1,5 +1,4 @@
 const User = require('../models/user');
-const sequelize = require('../utils/db');
 
 
 
@@ -16,11 +15,8 @@ const getPremiumStatus = async (req, res) => {
 
 const getLeaderboard = async(req,res)=>{
     try {
-        const users = await User.findAll({
-            attributes: ['name','totalExpense'],
-            group: ['User.id'],
-            order: [[sequelize.literal('totalExpense'), 'DESC']]
-        });
+        const users = await User.find({}, 'name totalExpense')
+            .sort({ totalExpense: -1 });
         res.status(200).json(users);
     } catch (error) {
         console.error("Error fetching leaderboard:", error);

@@ -1,4 +1,4 @@
-const baseUrl = 'http://13.60.5.145:4000';
+const baseUrl = 'http://localhost:4000';
 const { Cashfree, CFEnvironment } = require("cashfree-pg");
 const env = CFEnvironment.SANDBOX;
 

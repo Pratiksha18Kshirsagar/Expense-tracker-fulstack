@@ -107,7 +107,7 @@ const renderExpenses = () => {
     const li = document.createElement('li')
     li.innerHTML = `
       ${exp.expense_description} - ${exp.expense_amount} [${exp.category}] 
-      <button onclick="deleteExpense(${exp.id}, ${exp.expense_amount})">
+      <button onclick="deleteExpense('${exp._id}', ${exp.expense_amount})">
         Delete-Expense
       </button>
     `

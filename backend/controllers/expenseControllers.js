@@ -1,12 +1,10 @@
 const ExpenseModel = require('../models/expense');
-const sequelize = require('../utils/db');
 const ExcelJS = require('exceljs');
 const { uploadToS3 } = require('../services/s3Service');
 
 
 
 const addExpense = async (req, res) => {
-    const t = await sequelize.transaction();
     try {
         const { expense_amount, expense_description, category, note } = req.body;
         const newExpense = await ExpenseModel.create({
@@ -14,17 +12,14 @@ const addExpense = async (req, res) => {
             expense_description,
             category,
             note,
-            userId: req.user.id
-        }
-            , { transaction: t });
+            userId: req.user._id
+        });
 
         req.user.totalExpense += parseInt(expense_amount);
-        await req.user.save({ transaction: t });
-        await t.commit();
-        // await req.user.createExpenseModel({expense_amount, expense_description, category});
+        await req.user.save();
+
         res.status(201).json({ message: 'Expense added successfully' });
     } catch (error) {
-        await t.rollback();
         console.error('Error adding expense:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
@@ -32,9 +27,7 @@ const addExpense = async (req, res) => {
 
 const getExpenses = async (req, res) => {
     try {
-        // const expenses = await ExpenseModel.findAll();
-        // const expenses = await req.user.getExpenseModels();
-        const expenses = await ExpenseModel.findAll({ where: { userId: req.user.id } });
+        const expenses = await ExpenseModel.find({ userId: req.user._id });
 
         res.status(200).json({ expenses });
     } catch (error) {
@@ -45,23 +38,20 @@ const getExpenses = async (req, res) => {
 
 
 const deleteExpense = async (req, res) => {
-    const t = await sequelize.transaction();
     try {
         const expenseId = req.params.id;
         const expense_amt = req.query.expense_amount;
-        const deleted = await ExpenseModel.destroy({ where: { id: expenseId } }, { transaction: t });
+        const deleted = await ExpenseModel.findByIdAndDelete(expenseId);
 
         if (deleted) {
             req.user.totalExpense -= parseInt(expense_amt);
-            await req.user.save({ transaction: t });
-            await t.commit();
+            await req.user.save();
             res.status(200).json({ message: 'Expense deleted successfully' });
 
         } else {
             res.status(404).json({ message: 'Expense not found' });
         }
     } catch (error) {
-        await t.rollback();
         console.error('Error deleting expense:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
@@ -76,9 +66,7 @@ const downloadExpenses = async (req, res) => {
             return res.status(401).json({ message: 'Unauthorized' });
         }
 
-        const expenses = await ExpenseModel.findAll({
-            where: { userId: req.user.id }
-        });
+        const expenses = await ExpenseModel.find({ userId: req.user._id });
 
         const workbook = new ExcelJS.Workbook();
         const sheet = workbook.addWorksheet('Expenses');
@@ -93,7 +81,7 @@ const downloadExpenses = async (req, res) => {
 
         expenses.forEach(exp => {
             sheet.addRow({
-                id: exp.id,
+                id: exp._id,
                 expAmt: exp.expense_amount,
                 expDes: exp.expense_description,
                 expCat: exp.category,
@@ -103,7 +91,7 @@ const downloadExpenses = async (req, res) => {
 
         const data = await workbook.xlsx.writeBuffer();
 
-        const filename = `expenses/user-${req.user.id}/${Date.now()}.xlsx`;
+        const filename = `expenses/user-${req.user._id}/${Date.now()}.xlsx`;
 
         const fileUrl = await uploadToS3(
             data,
@@ -121,5 +109,3 @@ const downloadExpenses = async (req, res) => {
 
 
 module.exports = { addExpense, getExpenses, deleteExpense, downloadExpenses };
-
-

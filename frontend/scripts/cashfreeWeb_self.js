@@ -1,4 +1,4 @@
-const baseUrl = 'http//localhost:4000';
+const baseUrl = 'http://localhost:4000';
 document.getElementById("renderBtn").addEventListener("click", async () => {
     try {
         let token = localStorage.getItem("token");

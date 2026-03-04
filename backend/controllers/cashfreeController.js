@@ -11,7 +11,7 @@ exports.getPaymentPage = (req, res) => {
 
 // CREATE ORDER (AUTH REQUIRED)
 exports.processPayment = async (req, res) => {
-    const userId = req.user.id;  
+    const userId = req.user._id;  
     const customerId = String(userId);    
 
     const orderId = "ORDER-" + Date.now();
@@ -45,17 +45,11 @@ exports.getPaymentStatus = async (req, res) => {
 
         if (status === "Success") {
             // Mark PREMIUM using userId FROM QUERY
-            await User.update(
-                { isPremium: true },
-                { where: { id: userId } }
-            );
+            await User.findByIdAndUpdate(userId, { isPremium: true });
 
             return res.sendFile(path.join(__dirname, "../../frontend/views/success.html"));
         }
- await User.update(
-                { isPremium: false },
-                { where: { id: userId } }
-            );
+        await User.findByIdAndUpdate(userId, { isPremium: false });
 
         return res.sendFile(path.join(__dirname, "../../frontend/views/failure.html"));
 

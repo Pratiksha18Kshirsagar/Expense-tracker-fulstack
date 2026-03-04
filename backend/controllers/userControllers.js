@@ -1,4 +1,4 @@
-const baseUrl = 'http://13.60.5.145:4000';
+const baseUrl = 'http://localhost:4000';
 const UserModel = require('../models/user.js');
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -13,7 +13,7 @@ const createUser = async (req, res) => {
             return res.status(400).json({ message: 'All fields are required.' });
         }
 
-        const existingUser = await UserModel.findOne({ where: { email } });
+        const existingUser = await UserModel.findOne({ email });
 
         if (existingUser) {
             return res.status(409).json({ message: 'User with this email already exists.' });
@@ -40,11 +40,10 @@ const createUser = async (req, res) => {
 
 
 const loginUser = async (req, res) => {
-    // Login logic to be implemented
     try {
         const { email, password } = req.body;
 
-        const user = await UserModel.findOne({ where: { email } });
+        const user = await UserModel.findOne({ email });
         if (!user) {
             return res.status(401).json({ message: "Invalid email or password" });
         }
@@ -55,7 +54,7 @@ const loginUser = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { userId: user.id, email: user.email },
+            { userId: user._id, email: user.email },
             'secretkey',
             { expiresIn: '1h' }
         );
@@ -69,16 +68,16 @@ const loginUser = async (req, res) => {
 const forgotPassword = async (req, res) => {
     const { email } = req.body;
 
-    const user = await UserModel.findOne({ where: { email } });
+    const user = await UserModel.findOne({ email });
     if (!user) return res.status(404).json({ message: "User not found" });
 
     const request = await ForgotPasswordRequest.create({
-        userId: user.id
+        userId: user._id
     });
 
-    const resetLink = `${baseUrl}/user/password/resetpassword/${request.id}`;
+    const resetLink = `${baseUrl}/user/password/resetpassword/${request._id}`;
 
-        await sendResetEmail(user.email, resetLink);
+    await sendResetEmail(user.email, resetLink);
 
     res.json({ message: "Reset link sent to email" });
 };
@@ -88,14 +87,14 @@ const resetPassword = async (req, res) => {
     const { newPassword } = req.body;
 
     const request = await ForgotPasswordRequest.findOne({
-        where: { id: uuid, isActive: true }
+        _id: uuid, isActive: true
     });
 
     if (!request) {
         return res.status(400).json({ message: "Link expired or invalid" });
     }
 
-    const user = await UserModel.findByPk(request.userId);
+    const user = await UserModel.findById(request.userId);
 
     user.password = await bcrypt.hash(newPassword, 10);
     await user.save();
